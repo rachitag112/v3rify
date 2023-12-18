@@ -7,6 +7,7 @@ import { siteConfig } from "@/config/site";
 import { maintitle, title, subtitle } from "@/components/primitives";
 import { GithubIcon } from "@/components/icons";
 import DefaultLayout from "@/layouts/default";
+import Dashboard from "./dashboard";
 
 export default function IndexPage() {
 	return (
@@ -24,8 +25,7 @@ export default function IndexPage() {
 				<Spacer y={20} />
 				<div className="flex gap-3">
 					<Link
-						isExternal
-						href={siteConfig.links.docs}
+						href="./dashboard"
 						className={buttonStyles({
 							color: "primary",
 							radius: "full",

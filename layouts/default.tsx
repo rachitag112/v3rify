@@ -17,7 +17,7 @@ export default function DefaultLayout({
 			</main>
 			<footer className="w-full flex items-center justify-center py-3">
 					<span className="text-default-600">Made with ❤️</span><Spacer x={1}/>
-					<p className="text-purple-800"> By Team GUARDIANS OF THE GALAXY</p>
+					<p className="text-warning"> By Team GUARDIANS OF THE GALAXY</p>
 			</footer>
 		</div>
 	);
