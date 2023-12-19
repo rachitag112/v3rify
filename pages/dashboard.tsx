@@ -4,7 +4,6 @@ import React from "react";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Checkbox, Input, Link, Card, CardFooter, Image, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Textarea } from "@nextui-org/react";
 import Defaultlayout from "../layouts/default";
 
-
 const embeddedWalletConfig = embeddedWallet({
     // styles: {
     //   borderRadius: "10px",
@@ -131,6 +130,9 @@ export default function Dashboard() {
                                                 </DropdownItem>
                                             </DropdownMenu>
                                         </Dropdown>
+                                        <div className="flex py-2 px-1 justify-between">
+                                            {/*file upload*/}
+                                        </div>
 
                                         <div className="flex py-2 px-1 justify-between">
                                             <Checkbox

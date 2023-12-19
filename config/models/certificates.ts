@@ -1,41 +1,45 @@
 import mongoose, { Schema} from "mongoose";
 
 const certificates = new Schema({
-    OwnerAddress: {
+    ownerAddress: {
         type: String,
         required: true,
     },
-    certificateName: {
+    aadhaarNumber: {
+        type: Number,
+        required: true,
+    },
+    certificateTitle: {
         type: String,
         required: true,
     },
     // certificateHash: String,
     // certificateUrl: String,
-    Description: {
+    certificateDescription: {
         type: String,
         required: false,
     },
-    Status: {
+    status: {
         type: String,
         required: true,
     },
-    DocumentType: {
+    documentType: {
         type: String,
         required: true,
     },
-    VerifierAddress: {
+    verifierAddress: {
         type: String,
         required: true,
     },
-    OwnerName: {
+    ownerName: {
         type: String,
         required: false,
     },
-    OwnerEmail: {
+    ownerEmail: {
         type: String,
         required: true,
     },
-    OwnerPhone: {
+    ownerPhone: {
         type: String,
         required: true,
     },
