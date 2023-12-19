@@ -25,7 +25,7 @@ export default function IndexPage() {
 				<Spacer y={20} />
 				<div className="flex gap-3">
 					<Link
-						href="./dashboard"
+						href="/dashboard"
 						className={buttonStyles({
 							color: "primary",
 							radius: "full",

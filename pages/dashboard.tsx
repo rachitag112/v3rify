@@ -1,9 +1,7 @@
 import { ConnectWallet, Web3Button, embeddedWallet, metamaskWallet, smartWallet, useAddress, useConnect, useContract, useOwnedNFTs } from "@thirdweb-dev/react";
 import { useState } from "react";
 import React from "react";
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Checkbox, Input, Link, Card, CardFooter, Image, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, cn } from "@nextui-org/react";
-import { MailIcon } from '../components/MailIcon.tsx';
-import { LockIcon } from '../components/LockIcon.tsx';
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Checkbox, Input, Link, Card, CardFooter, Image, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Textarea } from "@nextui-org/react";
 import Defaultlayout from "../layouts/default";
 
 
@@ -23,7 +21,7 @@ const smartWalletConfig = smartWallet(embeddedWalletConfig, {
 });
 
 export default function Dashboard() {
-    const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    const { isOpen, onOpen, onOpenChange } = useDisclosure(); //modal
     const iconClasses = "text-xl text-default-500 pointer-events-none flex-shrink-0";
 
 
@@ -54,80 +52,7 @@ export default function Dashboard() {
     return (
         <Defaultlayout>
             <div>
-                <Button onPress={onOpen} color="primary">+ Add certificate</Button>
-                <Modal
-                    isOpen={isOpen}
-                    onOpenChange={onOpenChange}
-                    placement="top-center"
-                >
-                    <ModalContent>
-                        {(onClose) => (
-                            <>
-                                <ModalHeader className="flex flex-col gap-1">Add Certificate</ModalHeader>
-                                <ModalBody>
-                                    <Input
-                                        autoFocus
-                                        endContent={
-                                            <MailIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
-                                        }
-                                        label="Certificate Title"
-                                        placeholder="Enter title of certificate"
-                                        variant="bordered"
-                                    />
-                                    <Input
-                                        endContent={
-                                            <LockIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-1" />
-                                        }
-                                        label="Description"
-                                        placeholder="Brief description of certificate"
-                                        type="description"
-                                        variant="bordered"
-                                    />
-                                    <Dropdown>
-                                        <DropdownTrigger className="w-1/3">
-                                            <Button
-                                                variant="faded"
-                                            >
-                                                Document Type
-                                            </Button>
-                                        </DropdownTrigger>
-                                        <DropdownMenu variant="faded" aria-label="Dropdown menu with description">
-                                            <DropdownItem
-                                                key="edit"
-                                                description="Certificates are uploaded as PDFs"
-                                            >
-                                                PDF
-                                            </DropdownItem>
-                                        </DropdownMenu>
-                                    </Dropdown>
-
-                                    <div className="flex py-2 px-1 justify-between">
-                                        <Checkbox
-                                            classNames={{
-                                                label: "text-small",
-                                            }}
-                                        >
-                                            Remember me
-                                        </Checkbox>
-                                        <Link color="primary" href="#" size="sm">
-                                            Forgot password?
-                                        </Link>
-                                    </div>
-                                </ModalBody>
-                                <ModalFooter>
-                                    <Button color="danger" variant="flat" onPress={onClose}>
-                                        Close
-                                    </Button>
-                                    <Button color="primary" onPress={onClose}>
-                                        Sign in
-                                    </Button>
-                                </ModalFooter>
-                            </>
-                        )}
-                    </ModalContent>
-                </Modal>
-
-                <div className="p-8 flex items-start justify-center">
+                <div className="p-8 flex items-start justify-center">   {/* card  */}
                     <Card
                         isFooterBlurred
                         radius="lg"
@@ -137,16 +62,98 @@ export default function Dashboard() {
                             alt="Certificate"
                             className="object-cover"
                             height={200}
-                            src="/images (1).png"
+                            src="/cert.png"
                             width={200}
                         />
                         <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10 hover:bg-yellow-700">
-                            <p className="text-tiny text-white/80">Available soon.</p>
+                            <p className="text-tiny text-white/80">Not Verified</p>
                             <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                                Notify me
+                                Mint Certificate
                             </Button>
                         </CardFooter>
                     </Card>
+                </div>
+                <div className="flex items-start justify-center">
+                    <Button className="" onPress={onOpen} color="primary">+ Add certificate</Button>
+                    <Modal
+                        isOpen={isOpen}
+                        onOpenChange={onOpenChange}
+                        placement="top-center"
+                    >
+                        <ModalContent>
+                            {(onClose) => (
+                                <>
+                                    <ModalHeader className="flex flex-col gap-1">Add Certificate</ModalHeader>
+                                    <ModalBody>
+                                        <Input
+                                            autoFocus
+                                            label="Certificate Title"
+                                            placeholder="Enter title of certificate"
+                                            variant="bordered"
+                                        />
+                                        <Textarea
+                                            label="Description"
+                                            placeholder="Brief description of certificate"
+                                            variant="bordered"
+                                        />
+                                        <Dropdown>
+                                            <DropdownTrigger className="w-1/3">
+                                                <Button
+                                                    variant="faded"
+                                                >
+                                                    Document Type
+                                                </Button>
+                                            </DropdownTrigger>
+                                            <DropdownMenu variant="faded" aria-label="Dropdown menu with description">
+                                                <DropdownItem
+                                                    key="edit"
+                                                    description="Certificates are uploaded as PDFs"
+                                                >
+                                                    PDF
+                                                </DropdownItem>
+                                            </DropdownMenu>
+                                        </Dropdown>
+
+                                        <Dropdown>
+                                            <DropdownTrigger className="w-1/3">
+                                                <Button
+                                                    variant="faded"
+                                                >
+                                                    Verifier Address
+                                                </Button>
+                                            </DropdownTrigger>
+                                            <DropdownMenu variant="faded" aria-label="Dropdown menu with description">
+                                                <DropdownItem
+                                                    key="edit"
+                                                    description="We only have one verifier for now"
+                                                >
+                                                    0x6fdd7c9C4B9975f0fa5e25C5D54c63455f08Bb03
+                                                </DropdownItem>
+                                            </DropdownMenu>
+                                        </Dropdown>
+
+                                        <div className="flex py-2 px-1 justify-between">
+                                            <Checkbox
+                                                classNames={{
+                                                    label: "text-small",
+                                                }}
+                                            >
+                                                I hereby declare that the information provided is true and correct to the best of my knowledge and belief.
+                                            </Checkbox>
+                                        </div>
+                                    </ModalBody>
+                                    <ModalFooter>
+                                        <Button color="danger" variant="flat" onPress={onClose}>
+                                            Close
+                                        </Button>
+                                        <Button color="primary" onPress={onClose}>
+                                            Sign in
+                                        </Button>
+                                    </ModalFooter>
+                                </>
+                            )}
+                        </ModalContent>
+                    </Modal>
                 </div>
             </div>
         </Defaultlayout>
