@@ -1,56 +1,37 @@
 import React from 'react';
-import { InboxOutlined } from '@ant-design/icons';
+import { UploadOutlined } from '@ant-design/icons';
 import type { UploadProps } from 'antd';
-import { message, Upload } from 'antd';
-
-const { Dragger } = Upload;
+import { Button, message, Upload } from 'antd';
 
 const props: UploadProps = {
   name: 'file',
-  multiple: true,
   action: 'https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188',
+  headers: {
+    authorization: 'authorization-text',
+  },
   onChange(info) {
-    const { status } = info.file;
-    if (status !== 'uploading') {
+    if (info.file.status !== 'uploading') {
       console.log(info.file, info.fileList);
     }
-    if (status === 'done') {
-      message.success(`${info.file.name} file uploaded successfully.`);
-    } else if (status === 'error') {
+    if (info.file.status === 'done') {
+      message.success(`${info.file.name} file uploaded successfully`);
+    } else if (info.file.status === 'error') {
       message.error(`${info.file.name} file upload failed.`);
     }
   },
-  onDrop(e) {
-    console.log('Dropped files', e.dataTransfer.files);
-  },
 };
 
-const fileUpload: React.FC = () => (
-  <Dragger {...props}>
-    <p className="ant-upload-drag-icon" style={styles.drag}>
-      <InboxOutlined />
-    </p>
-    <p className="ant-upload-text" style={styles.text}>Click or drag file to this area to upload</p>
-    <p className="ant-upload-hint" style={styles.hint}>
-      Support for a single or bulk upload. Strictly prohibited from uploading company data or other
-      banned files.
-    </p>
-  </Dragger>
+const App: React.FC = () => (
+  <Upload {...props}>
+    <Button icon={<UploadOutlined />} style={styles.hint}  onClick={uploadToIpfs} >Click to Upload</Button>
+  </Upload>
 );
+
 
 const styles = {
   hint: {
     color: '#FFFFFF'
   },
-  text: {
-    color: '#FFFFFF'
-  },
-  drag: {
-    color: '#FFFFFF'
-  },
-  dragger: {
-    color: '#FFFFFF'
-  },
 } as const;
 
-export default fileUpload;
+export default App;

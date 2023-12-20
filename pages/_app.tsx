@@ -33,7 +33,7 @@ export default function App({ Component, pageProps }: AppProps) {
 		<NextUIProvider navigate={router.push}>
 			<NextThemesProvider>
 				<ThirdwebProvider
-					activeChain={activeChain}
+					activeChain="mumbai"
 					clientId={process.env.NEXT_PUBLIC_TEMPLATE_CLIENT_ID}
 					supportedWallets={[
 						smartWallet(metamaskWallet({ recommended: true }), smartWalletConfig),

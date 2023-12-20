@@ -1,17 +1,14 @@
 import { ConnectWallet, Web3Button, embeddedWallet, metamaskWallet, smartWallet, useAddress, useConnect, useContract, useOwnedNFTs } from "@thirdweb-dev/react";
-import { useState } from "react";
+// import { useState ,useEffect} from "react";
+import {  useState, useEffect } from "react";
 import React from "react";
 import { Modal, ModalContent, ModalHeader, ModalBody, Spacer, ModalFooter, Button, useDisclosure, Checkbox, Input, Link, Card, CardFooter, Image, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Textarea, spacer } from "@nextui-org/react";
 import Defaultlayout from "../layouts/default";
 import FileUpload from "@/components/fileUpload";
+import Page from "@/components/pythonCall";
+import { motion } from 'framer-motion';
 
 const embeddedWalletConfig = embeddedWallet({
-    // styles: {
-    //   borderRadius: "10px",
-    //   colorBackground: "#232323",
-    //   colorPrimary: "lightseagreen",
-    //   colorText: "#FFFFFF",
-    // }
 });
 
 const metamaskWalletConfig = metamaskWallet();
@@ -20,61 +17,92 @@ const smartWalletConfig = smartWallet(embeddedWalletConfig, {
     gasless: true,
 });
 
+export function Certificate(props: Props) {
+  
+	const handleSubmit = async (postId: string) => {
+	  try {
+		let response = await fetch(
+		  "http://localhost:3000/api/postcertificate",
+		  {
+			method: "POST",
+			body: JSON.stringify({
+                title,
+                content,
+              }),
+            headers: {
+			  Accept: "application/json, text/plain, */*",
+			  "Content-Type": "application/json",
+			},
+		  }
+		);
+		response = await response.json();
+		window.location.reload();
+	  } catch (error) {
+		console.log("An error occurred while deleting ", error);
+	  }
+	};
+  }
+
+  
+
+
+
 export default function Dashboard() {
+
     const { isOpen, onOpen, onOpenChange } = useDisclosure(); //modal
     const iconClasses = "text-xl text-default-500 pointer-events-none flex-shrink-0";
+    // const [docs, setDocs] = useState([]);
+    
+
+    const [formData, setFormData] = useState({
+        title: '',
+        description: '',
+        documentType: '',
+        verifierAddress: ''  
+      });
+
+      const [file, setFile] = useState();
+      const { mutateAsync: upload } = useStorageUpload();
+   
+
+      
+// for both modals
+const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+const [isIssueModalOpen, setIsIssueModalOpen] = useState(false);
+const [isToggled, setIsToggled] = useState(false);
+const toggle = () => {
+  setIsToggled(!isToggled);
+};
+
+const openAddModal = () => setIsAddModalOpen(true); 
+const closeAddModal = () => setIsAddModalOpen(false);
+
+const openIssueModal = () => setIsIssueModalOpen(true);
+const closeIssueModal = () => setIsIssueModalOpen(false);
+      
+     
+      
+      const handleInputChange = (event) => {
+        setFormData({
+          ...formData,
+          [event.target.name]: event.target.value
+        });
+      }
+      
+    //   const handleSubmit = (formData) => {
+    //     setDocs(prevDocs => [...prevDocs, formData]); 
+    //     console.log(docs);
+    //   }
+      
+      
 
 
+    
     const address = useAddress();
     const connect = useConnect();
 
     const [personalWalletAddress, setPersonalWalletAddress] = useState<string | undefined>(undefined);
     const [smartWalletAddress, setSmartWalletAddress] = useState<string | undefined>(undefined);
-
-
-    
-
-    const [formData, setFormData] = useState({
-     titleDocs : '', 
-     desc: '',
-      file: null
-    });
-    const [docs, setDocs] = useState([]);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const newDoc = {
-      titleDocs: formData.titleDocs,
-      desc: formData.desc,
-      file: formData.file,
-    };
-
-    setDocs((prevDocs) => {
-      return [...prevDocs, newDoc];
-    });
-
-    // handleCloseModal();
-  };
-
-      const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prevData) => ({
-          ...prevData,
-          [name]: value,
-        }));
-      };
-    
-      const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        setFormData((prevData) => ({
-          ...prevData,
-          file,
-        }));
-      };
-
-
-
     const handleLogin = async () => {
         try {
             const personalWallet = await connect(metamaskWalletConfig);
@@ -91,11 +119,31 @@ export default function Dashboard() {
         } catch (error) {
             console.error(error);
         }
+
+
+        
+
+
+        
     };
 
     return (
         <Defaultlayout>
             <div>
+            <motion.div
+            className="message"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+          >
+            
+            {/* <Text >No Certifications Added Yet</Text> */}
+            <h1 style={{fontSize:'30px'}} > No Certifications Added Yet </h1>
+            <Spacer y={1} />
+            <p>Click below to add your certification documents</p>
+            <Spacer y={1.5} />
+          </motion.div>
+
                 <div className="p-8 flex items-start justify-center">   {/* card  */}
                     <Card
                         isFooterBlurred
@@ -117,19 +165,20 @@ export default function Dashboard() {
                         </CardFooter>
                     </Card>
                 </div>
-                <div className="flex items-start justify-center">
-                    <Button className="" onPress={onOpen} color="primary">+ Add certificate</Button>
+
+                <div className="flex items-start justify-around">
+                    <Button className="" onPress={openAddModal} color="primary">+ Add certificate</Button>
 
                     <Modal
-                        isOpen={isOpen}
-                        onOpenChange={onOpenChange}
+                        isOpen={isAddModalOpen}
+                        onOpenChange={closeAddModal}
                         placement="top-center"
+                        // onSubmit={handleSubmit}
                     >
                         <ModalContent>
                             {(onClose) => (
                                 <>
                                     <ModalHeader className="flex flex-col gap-1">Add Certificate</ModalHeader>
-                                    <form onSubmit={handleSubmit} >
                                     <ModalBody>
                                         
                                         <Input
@@ -137,13 +186,17 @@ export default function Dashboard() {
                                             label="Certificate Title"
                                             placeholder="Enter title of certificate"
                                             variant="bordered"
-                                            value={formData.titleDocs}   onChange={handleInputChange} name="titleDocs"
+                                            name="title"
+                                            value={formData.title}
+                                            onChange={handleInputChange}
                                         />
                                         <Textarea
                                             label="Description"
                                             placeholder="Brief description of certificate"
                                             variant="bordered"
-                                            value={formData.desc}   onChange={handleInputChange} name="desc"
+                                            name="description"
+                                            value={formData.description}
+                                            onChange={handleInputChange}
                                         />
 
                                         <div className="flex justify-between">
@@ -159,6 +212,9 @@ export default function Dashboard() {
                                                 <DropdownItem
                                                     key="edit"
                                                     description="Certificates are uploaded as PDFs"
+                                                   
+                                                    value={formData.documentType}
+                                                    onChange={handleInputChange}
                                                 >
                                                     PDF
                                                 </DropdownItem>
@@ -169,6 +225,9 @@ export default function Dashboard() {
                                             <DropdownTrigger className="w-2/5">
                                                 <Button
                                                     variant="faded"
+                                                    name="verifierAddress"
+                                                    value={formData.verifierAddress}
+                                                    onChange={handleInputChange}
                                                 >
                                                     Verifier Address
                                                 </Button>
@@ -183,9 +242,13 @@ export default function Dashboard() {
                                             </DropdownMenu>
                                         </Dropdown>
                                         </div>
-                                            <FileUpload />
+                                            {/* <FileUpload /> */}
+                                            <div>
+                                            <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+                                            <button onClick={uploadToIpfs}>Upload</button>
+                                            </div>
                                         <Spacer y={4}/>
-                                        <div className="flex py-2 px-1 justify-between">
+                                        <div className="flex py-2 px-1 justify-between" >
                                             <Checkbox
                                                 classNames={{
                                                     label: "text-small",
@@ -206,7 +269,58 @@ export default function Dashboard() {
                                             Add Certificate
                                         </Button>
                                     </ModalFooter>
-                                    </form>
+                                </>
+                            )}
+                        </ModalContent>
+                    </Modal>
+
+
+
+                    <Button className="" onPress={openIssueModal} color="danger">+ Issue Certificate</Button>
+
+                    <Modal
+                        isOpen={isIssueModalOpen}
+                        onOpenChange={closeIssueModal}
+                        placement="top-center"
+                    >
+                        <ModalContent>
+                            {(onClose) => (
+                                <>
+                                    <ModalHeader className="flex flex-col gap-1">Issue Certificate</ModalHeader>
+                                    <ModalBody>
+                                        
+                                        <Input
+                                            autoFocus
+                                            label="Issued to"
+                                            placeholder="Enter the issued to name"
+                                            variant="bordered"
+                                        />
+                                        <label htmlFor="">Add Certificate Template</label>
+                                        <FileUpload />
+                                        <label htmlFor="">Add .xlsx file</label>
+                                        <FileUpload />
+                                        <Spacer y={4}/>
+                                        <div className="flex py-2 px-1 justify-between">
+                                            <Checkbox
+                                                classNames={{
+                                                    label: "text-small",
+                                                }}
+                                            >
+                                                I hereby declare that the information provided is true and correct to the best of my knowledge and belief.
+                                            </Checkbox>
+                                        </div>
+                                    </ModalBody>
+
+                                 
+
+                                    <ModalFooter>
+                                        <Button color="danger" variant="flat" onPress={onClose}>
+                                            Close
+                                        </Button>
+                                        <Button color="primary" onPress={Page} >
+                                            Add Certificate
+                                        </Button>
+                                    </ModalFooter>
                                 </>
                             )}
                         </ModalContent>
