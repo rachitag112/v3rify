@@ -1,8 +1,9 @@
 import { ConnectWallet, Web3Button, embeddedWallet, metamaskWallet, smartWallet, useAddress, useConnect, useContract, useOwnedNFTs } from "@thirdweb-dev/react";
 import { useState } from "react";
 import React from "react";
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Checkbox, Input, Link, Card, CardFooter, Image, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Textarea } from "@nextui-org/react";
+import { Modal, ModalContent, ModalHeader, ModalBody, Spacer, ModalFooter, Button, useDisclosure, Checkbox, Input, Link, Card, CardFooter, Image, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Textarea, spacer } from "@nextui-org/react";
 import Defaultlayout from "../layouts/default";
+import FileUpload from "@/components/fileUpload";
 
 const embeddedWalletConfig = embeddedWallet({
     // styles: {
@@ -29,6 +30,50 @@ export default function Dashboard() {
 
     const [personalWalletAddress, setPersonalWalletAddress] = useState<string | undefined>(undefined);
     const [smartWalletAddress, setSmartWalletAddress] = useState<string | undefined>(undefined);
+
+
+    
+
+    const [formData, setFormData] = useState({
+     titleDocs : '', 
+     desc: '',
+      file: null
+    });
+    const [docs, setDocs] = useState([]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const newDoc = {
+      titleDocs: formData.titleDocs,
+      desc: formData.desc,
+      file: formData.file,
+    };
+
+    setDocs((prevDocs) => {
+      return [...prevDocs, newDoc];
+    });
+
+    // handleCloseModal();
+  };
+
+      const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prevData) => ({
+          ...prevData,
+          [name]: value,
+        }));
+      };
+    
+      const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        setFormData((prevData) => ({
+          ...prevData,
+          file,
+        }));
+      };
+
+
 
     const handleLogin = async () => {
         try {
@@ -74,6 +119,7 @@ export default function Dashboard() {
                 </div>
                 <div className="flex items-start justify-center">
                     <Button className="" onPress={onOpen} color="primary">+ Add certificate</Button>
+
                     <Modal
                         isOpen={isOpen}
                         onOpenChange={onOpenChange}
@@ -83,20 +129,26 @@ export default function Dashboard() {
                             {(onClose) => (
                                 <>
                                     <ModalHeader className="flex flex-col gap-1">Add Certificate</ModalHeader>
+                                    <form onSubmit={handleSubmit} >
                                     <ModalBody>
+                                        
                                         <Input
                                             autoFocus
                                             label="Certificate Title"
                                             placeholder="Enter title of certificate"
                                             variant="bordered"
+                                            value={formData.titleDocs}   onChange={handleInputChange} name="titleDocs"
                                         />
                                         <Textarea
                                             label="Description"
                                             placeholder="Brief description of certificate"
                                             variant="bordered"
+                                            value={formData.desc}   onChange={handleInputChange} name="desc"
                                         />
+
+                                        <div className="flex justify-between">
                                         <Dropdown>
-                                            <DropdownTrigger className="w-1/3">
+                                            <DropdownTrigger className="w-2/5">
                                                 <Button
                                                     variant="faded"
                                                 >
@@ -114,7 +166,7 @@ export default function Dashboard() {
                                         </Dropdown>
 
                                         <Dropdown>
-                                            <DropdownTrigger className="w-1/3">
+                                            <DropdownTrigger className="w-2/5">
                                                 <Button
                                                     variant="faded"
                                                 >
@@ -130,10 +182,9 @@ export default function Dashboard() {
                                                 </DropdownItem>
                                             </DropdownMenu>
                                         </Dropdown>
-                                        <div className="flex py-2 px-1 justify-between">
-                                            {/*file upload*/}
                                         </div>
-
+                                            <FileUpload />
+                                        <Spacer y={4}/>
                                         <div className="flex py-2 px-1 justify-between">
                                             <Checkbox
                                                 classNames={{
@@ -144,14 +195,18 @@ export default function Dashboard() {
                                             </Checkbox>
                                         </div>
                                     </ModalBody>
+
+                                 
+
                                     <ModalFooter>
                                         <Button color="danger" variant="flat" onPress={onClose}>
                                             Close
                                         </Button>
                                         <Button color="primary" onPress={onClose}>
-                                            Sign in
+                                            Add Certificate
                                         </Button>
                                     </ModalFooter>
+                                    </form>
                                 </>
                             )}
                         </ModalContent>
