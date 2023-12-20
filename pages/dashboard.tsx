@@ -17,36 +17,6 @@ const smartWalletConfig = smartWallet(embeddedWalletConfig, {
     gasless: true,
 });
 
-export function Certificate(props: Props) {
-  
-	const handleSubmit = async (postId: string) => {
-	  try {
-		let response = await fetch(
-		  "http://localhost:3000/api/postcertificate",
-		  {
-			method: "POST",
-			body: JSON.stringify({
-                title,
-                content,
-              }),
-            headers: {
-			  Accept: "application/json, text/plain, */*",
-			  "Content-Type": "application/json",
-			},
-		  }
-		);
-		response = await response.json();
-		window.location.reload();
-	  } catch (error) {
-		console.log("An error occurred while deleting ", error);
-	  }
-	};
-  }
-
-  
-
-
-
 export default function Dashboard() {
 
     const { isOpen, onOpen, onOpenChange } = useDisclosure(); //modal
@@ -62,7 +32,7 @@ export default function Dashboard() {
       });
 
       const [file, setFile] = useState();
-      const { mutateAsync: upload } = useStorageUpload();
+    //   const { mutateAsync: upload } = useStorageUpload();
    
 
       
@@ -80,7 +50,6 @@ const closeAddModal = () => setIsAddModalOpen(false);
 const openIssueModal = () => setIsIssueModalOpen(true);
 const closeIssueModal = () => setIsIssueModalOpen(false);
       
-     
       
       const handleInputChange = (event) => {
         setFormData({
@@ -242,11 +211,11 @@ const closeIssueModal = () => setIsIssueModalOpen(false);
                                             </DropdownMenu>
                                         </Dropdown>
                                         </div>
-                                            {/* <FileUpload /> */}
-                                            <div>
+                                            <FileUpload />
+                                            {/* <div>
                                             <input type="file" onChange={(e) => setFile(e.target.files[0])} />
                                             <button onClick={uploadToIpfs}>Upload</button>
-                                            </div>
+                                            </div> */}
                                         <Spacer y={4}/>
                                         <div className="flex py-2 px-1 justify-between" >
                                             <Checkbox

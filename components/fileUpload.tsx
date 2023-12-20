@@ -23,7 +23,7 @@ const props: UploadProps = {
 
 const App: React.FC = () => (
   <Upload {...props}>
-    <Button icon={<UploadOutlined />} style={styles.hint}  onClick={uploadToIpfs} >Click to Upload</Button>
+    <Button icon={<UploadOutlined />} style={styles.hint} >Click to Upload</Button>
   </Upload>
 );
 
